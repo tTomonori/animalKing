@@ -13,7 +13,7 @@ public partial class MyBehaviour : MonoBehaviour {
     /// <param name="duration">変化時間</param>
     /// <param name="callback">変化終了時関数</param>
     public Coroutine scaleBy(Vector3 delta, float duration, Action callback = null) {
-        return StartCoroutine(scaleDelta(scale + delta, duration, callback));
+        return StartCoroutine(scaleDelta(delta, duration, callback));
     }
     /// <summary>
     /// scaleを変化させる
@@ -22,10 +22,10 @@ public partial class MyBehaviour : MonoBehaviour {
     /// <param name="duration">変化時間</param>
     /// <param name="callback">変化終了時間数</param>
     public Coroutine scaleTo(Vector3 goal, float duration, Action callback = null) {
-        return StartCoroutine(scaleDelta(goal, duration, callback));
+        return StartCoroutine(scaleDelta(goal - scale, duration, callback));
     }
     public Coroutine scaleTo(Vector2 goal, float duration, Action callback = null) {
-        return StartCoroutine(scaleDelta(new Vector3(goal.x, goal.y, scaleZ), duration, callback));
+        return StartCoroutine(scaleDelta(new Vector3(goal.x - scaleX, goal.y - scaleY, 0), duration, callback));
     }
     /// <summary>
     /// scaleを変化させる
@@ -35,7 +35,7 @@ public partial class MyBehaviour : MonoBehaviour {
     /// <param name="speed">変化速度(/s)</param>
     /// <param name="callback">変化終了時関数</param>
     public Coroutine scaleByWithSpeed(Vector3 delta, float speed, Action callback = null) {
-        return StartCoroutine(scaleDelta(scale + delta, delta.magnitude / speed, callback));
+        return StartCoroutine(scaleDelta(delta, delta.magnitude / speed, callback));
     }
     /// <summary>
     /// scaleを変化させる
@@ -46,24 +46,22 @@ public partial class MyBehaviour : MonoBehaviour {
     /// <param name="callback">変化終了時関数</param>
     public Coroutine scaleToWithSpeed(Vector3 goal, float speed, Action callback = null) {
         Vector3 tDelta = goal - scale;
-        return StartCoroutine(scaleDelta(goal, tDelta.magnitude / speed, callback));
+        return StartCoroutine(scaleDelta(tDelta, tDelta.magnitude / speed, callback));
     }
     public Coroutine scaleToWithSpeed(Vector2 goal, float speed, Action callback = null) {
         Vector2 tDelta = goal - scale2D;
-        return StartCoroutine(scaleDelta(goal, tDelta.magnitude / speed, callback));
+        return StartCoroutine(scaleDelta(tDelta, tDelta.magnitude / speed, callback));
     }
-    private IEnumerator scaleDelta(Vector3 goal, float duration, Action callback) {
-        Vector3 tInitial = scale;
+    private IEnumerator scaleDelta(Vector3 delta, float duration, Action callback) {
         float tElapsedTime = 0;
         while (true) {
-            tElapsedTime += Time.deltaTime;
-            if (tElapsedTime > duration) tElapsedTime = duration;
-            if (tElapsedTime == duration) {//完了
-                scale = goal;
+            if (tElapsedTime + Time.deltaTime >= duration) {//完了
+                scale += delta * (duration - tElapsedTime) / duration;
                 if (callback != null) callback();
                 yield break;
             }
-            scale = tInitial + (goal - tInitial) * (tElapsedTime / duration);
+            tElapsedTime += Time.deltaTime;
+            scale += delta * Time.deltaTime / duration;
             yield return null;
         }
     }
@@ -74,7 +72,7 @@ public partial class MyBehaviour : MonoBehaviour {
     /// <param name="duration">移動時間</param>
     /// <param name="callback">移動終了時関数</param>
     public Coroutine moveBy(Vector3 delta, float duration, Action callback = null) {
-        return StartCoroutine(moveDelta(position + delta, duration, callback));
+        return StartCoroutine(moveDelta(delta, duration, callback));
     }
     /// <summary>
     /// 移動させる
@@ -83,10 +81,10 @@ public partial class MyBehaviour : MonoBehaviour {
     /// <param name="duration">移動時間</param>
     /// <param name="callback">移動終了時関数</param>
     public Coroutine moveTo(Vector3 goal, float duration, Action callback = null) {
-        return StartCoroutine(moveDelta(goal, duration, callback));
+        return StartCoroutine(moveDelta(goal - position, duration, callback));
     }
     public Coroutine moveTo(Vector2 goal, float duration, Action callback = null) {
-        return StartCoroutine(moveDelta(new Vector3(goal.x, goal.y, positionZ), duration, callback));
+        return StartCoroutine(moveDelta(new Vector3(goal.x - positionX, goal.y - positionY, 0), duration, callback));
     }
     /// <summary>
     /// 移動させる
@@ -96,7 +94,7 @@ public partial class MyBehaviour : MonoBehaviour {
     /// <param name="speed">移動速度(/s)</param>
     /// <param name="callback">移動終了時関数</param>
     public Coroutine moveByWithSpeed(Vector3 delta, float speed, Action callback = null) {
-        return StartCoroutine(moveDelta(position + delta, delta.magnitude / speed, callback));
+        return StartCoroutine(moveDelta(delta, delta.magnitude / speed, callback));
     }
     /// <summary>
     /// 移動させる
@@ -107,24 +105,22 @@ public partial class MyBehaviour : MonoBehaviour {
     /// <param name="callback">移動終了時関数</param>
     public Coroutine moveToWithSpeed(Vector3 goal, float speed, Action callback = null) {
         Vector3 tDelta = goal - position;
-        return StartCoroutine(moveDelta(goal, tDelta.magnitude / speed, callback));
+        return StartCoroutine(moveDelta(tDelta, tDelta.magnitude / speed, callback));
     }
     public Coroutine moveToWithSpeed(Vector2 goal, float speed, Action callback = null) {
         Vector2 tDelta = goal - position2D;
-        return StartCoroutine(moveDelta(goal, tDelta.magnitude / speed, callback));
+        return StartCoroutine(moveDelta(tDelta, tDelta.magnitude / speed, callback));
     }
-    private IEnumerator moveDelta(Vector3 goal, float duration, Action callback) {
-        Vector3 tInitial = position;
+    private IEnumerator moveDelta(Vector3 delta, float duration, Action callback) {
         float tElapsedTime = 0;
         while (true) {
-            tElapsedTime += Time.deltaTime;
-            if (tElapsedTime > duration) tElapsedTime = duration;
-            if (tElapsedTime == duration) {//完了
-                position = goal;
+            if (tElapsedTime + Time.deltaTime >= duration) {//完了
+                position += delta * (duration - tElapsedTime) / duration;
                 if (callback != null) callback();
                 yield break;
             }
-            position = tInitial + (goal - tInitial) * (tElapsedTime / duration);
+            tElapsedTime += Time.deltaTime;
+            position += delta * Time.deltaTime / duration;
             yield return null;
         }
     }
@@ -135,22 +131,21 @@ public partial class MyBehaviour : MonoBehaviour {
     /// <param name="duration">回転時間</param>
     /// <param name="callback">回転終了時関数</param>
     public Coroutine rotateBy(float delta, float duration, Action callback = null) {
-        return StartCoroutine(rotateDelta(rotateZ + delta, duration, callback));
+        return StartCoroutine(rotateDelta(delta, duration, callback));
     }
-    private IEnumerator rotateDelta(float goal, float duration, Action callback) {
-        float tInitial = rotateZ;
+    private IEnumerator rotateDelta(float delta, float duration, Action callback) {
         float tElapsedTime = 0;
         while (true) {
-            tElapsedTime += Time.deltaTime;
-            if (tElapsedTime > duration) tElapsedTime = duration;
-            if (tElapsedTime == duration) {//完了
-                rotateZ = goal;
+            if (tElapsedTime + Time.deltaTime >= duration) {//完了
+                rotateZ += delta * (duration - tElapsedTime) / duration;
                 if (callback != null) callback();
                 yield break;
             }
-            rotateZ = tInitial + (goal - tInitial) * (tElapsedTime / duration);
+            tElapsedTime += Time.deltaTime;
+            rotateZ += delta * Time.deltaTime / duration;
             yield return null;
         }
+
     }
     /// <summary>
     /// 回転させ続ける
@@ -179,63 +174,68 @@ public partial class MyBehaviour : MonoBehaviour {
         foreach (Text tC in GetComponentsInChildren<Text>()) StartCoroutine(opacityDelta(tC, delta, duration, system.getCounter()));
         system.then(callback);
     }
-    private IEnumerator opacityDelta(SpriteRenderer obj, float delta, float duration, Action callback) {
-        Color tInitial = obj.color;
+    private IEnumerator opacityDeltad(SpriteRenderer obj, float delta, float duration, Action callback) {
         float tElapsedTime = 0;
         while (true) {
-            tElapsedTime += Time.deltaTime;
-            if (tElapsedTime > duration) tElapsedTime = duration;
-            if (tElapsedTime == duration) {//完了
-                obj.color = new Color(tInitial.r, tInitial.g, tInitial.b, tInitial.a + delta);
+            if ((float)tElapsedTime + Time.deltaTime >= (float)duration) {//完了
+                obj.color = new Color(obj.color.r, obj.color.g, obj.color.b, obj.color.a + delta * (duration - tElapsedTime) / duration);
                 if (callback != null) callback();
                 yield break;
             }
-            obj.color = new Color(tInitial.r, tInitial.g, tInitial.b, tInitial.a + delta * (tElapsedTime / duration));
+            tElapsedTime += Time.deltaTime;
+            obj.color = new Color(obj.color.r, obj.color.g, obj.color.b, obj.color.a + delta * Time.deltaTime / duration);
             yield return null;
         }
     }
     private IEnumerator opacityDelta(TextMesh obj, float delta, float duration, Action callback) {
-        Color tInitial = obj.color;
         float tElapsedTime = 0;
         while (true) {
-            tElapsedTime += Time.deltaTime;
-            if (tElapsedTime > duration) tElapsedTime = duration;
-            if (tElapsedTime == duration) {//完了
-                obj.color = new Color(tInitial.r, tInitial.g, tInitial.b, tInitial.a + delta);
+            if ((float)tElapsedTime + Time.deltaTime >= (float)duration) {//完了
+                obj.color = new Color(obj.color.r, obj.color.g, obj.color.b, obj.color.a + delta * (duration - tElapsedTime) / duration);
                 if (callback != null) callback();
                 yield break;
             }
-            obj.color = new Color(tInitial.r, tInitial.g, tInitial.b, tInitial.a + delta * (tElapsedTime / duration));
+            tElapsedTime += Time.deltaTime;
+            obj.color = new Color(obj.color.r, obj.color.g, obj.color.b, obj.color.a + delta * Time.deltaTime / duration);
             yield return null;
         }
     }
     private IEnumerator opacityDelta(Image obj, float delta, float duration, Action callback) {
-        Color tInitial = obj.color;
         float tElapsedTime = 0;
         while (true) {
-            tElapsedTime += Time.deltaTime;
-            if (tElapsedTime > duration) tElapsedTime = duration;
-            if (tElapsedTime == duration) {//完了
-                obj.color = new Color(tInitial.r, tInitial.g, tInitial.b, tInitial.a + delta);
+            if ((float)tElapsedTime + Time.deltaTime >= (float)duration) {//完了
+                obj.color = new Color(obj.color.r, obj.color.g, obj.color.b, obj.color.a + delta * (duration - tElapsedTime) / duration);
                 if (callback != null) callback();
                 yield break;
             }
-            obj.color = new Color(tInitial.r, tInitial.g, tInitial.b, tInitial.a + delta * (tElapsedTime / duration));
+            tElapsedTime += Time.deltaTime;
+            obj.color = new Color(obj.color.r, obj.color.g, obj.color.b, obj.color.a + delta * Time.deltaTime / duration);
             yield return null;
         }
     }
     private IEnumerator opacityDelta(Text obj, float delta, float duration, Action callback) {
-        Color tInitial = obj.color;
         float tElapsedTime = 0;
         while (true) {
-            tElapsedTime += Time.deltaTime;
-            if (tElapsedTime > duration) tElapsedTime = duration;
-            if (tElapsedTime == duration) {//完了
-                obj.color = new Color(tInitial.r, tInitial.g, tInitial.b, tInitial.a + delta);
+            if ((float)tElapsedTime + Time.deltaTime >= (float)duration) {//完了
+                obj.color = new Color(obj.color.r, obj.color.g, obj.color.b, obj.color.a + delta * (duration - tElapsedTime) / duration);
                 if (callback != null) callback();
                 yield break;
             }
-            obj.color = new Color(tInitial.r, tInitial.g, tInitial.b, tInitial.a + delta * (tElapsedTime / duration));
+            tElapsedTime += Time.deltaTime;
+            obj.color = new Color(obj.color.r, obj.color.g, obj.color.b, obj.color.a + delta * Time.deltaTime / duration);
+            yield return null;
+        }
+    }
+    private IEnumerator opacityDelta(SpriteRenderer obj, float delta, float duration, Action callback) {
+        float tElapsedTime = 0;
+        while (true) {
+            if ((float)tElapsedTime + Time.deltaTime >= (float)duration) {//完了
+                obj.color = new Color(obj.color.r, obj.color.g, obj.color.b, obj.color.a + delta * (duration - tElapsedTime) / duration);
+                if (callback != null) callback();
+                yield break;
+            }
+            tElapsedTime += Time.deltaTime;
+            obj.color = new Color(obj.color.r, obj.color.g, obj.color.b, obj.color.a + delta * Time.deltaTime / duration);
             yield return null;
         }
     }

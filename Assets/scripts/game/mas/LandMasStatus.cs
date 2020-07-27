@@ -35,6 +35,7 @@ public class LandMasStatus : MasStatus {
     public int mOccupyCost { get { return mValue; } }
     public int mLootedCost { get { return (int)(mLootingRate * mValue / 10 * Mathf.Pow(3, mExpansionLevel)); } }
     public int mExpansionCost { get { return getExpansionCost(mExpansionLevel); } }
+    public int mFreeCost { get { return (int)(mTotalValue * 0.8f); } }
     public int mTotalValue {
         get {
             int tTotal = mValue;

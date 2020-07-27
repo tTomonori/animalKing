@@ -1,12 +1,8 @@
-﻿<Properties StartupConfiguration="{643BC17A-F232-38B2-7185-AB3F97A605B9}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/selectStage/StageList.cs">
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/scripts/gameConfig/GameConfigMain.cs">
     <Files>
-      <File FileName="Assets/resources/stage/stage.json" Line="2" Column="41" />
-      <File FileName="Assets/resources/stage/data/standard.json" Line="18" Column="31" />
-      <File FileName="Assets/resources/stage/data/centerIland.json" Line="3" Column="20" />
-      <File FileName="Assets/scripts/selectStage/SelectStageMain.cs" Line="17" Column="57" />
-      <File FileName="Assets/scripts/selectStage/StageList.cs" Line="8" Column="57" />
-      <File FileName="Assets/scripts/selectStage/StageView.cs" Line="19" Column="8" />
+      <File FileName="Assets/resources/stage/data/centerIland.json" Line="30" Column="18" />
+      <File FileName="Assets/scripts/selectStage/SelectStageMain.cs" Line="11" Column="42" />
       <File FileName="Assets/scripts/gameConfig/GameConfigMain.cs" Line="21" Column="118" />
     </Files>
   </MonoDevelop.Ide.Workbench>

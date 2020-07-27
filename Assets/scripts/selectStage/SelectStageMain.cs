@@ -8,7 +8,10 @@ public class SelectStageMain : MonoBehaviour {
     [SerializeField] public StageView mStageView;
     // Start is called before the first frame update
     void Start() {
-        mStageView.showStage("standard");
+        string tPath= MySceneManager.getArg("selectStage").get<string>("path");
+        mStageView.showStage(tPath);
+        mStageName = mStageView.mStageData.mName;
+        mStageFilePath = tPath;
         Subject.addObserver(new Observer("selectStageMain", (aMessage) => {
             if (aMessage.name == "ok") {
                 Subject.removeObserver("selectStageMain");

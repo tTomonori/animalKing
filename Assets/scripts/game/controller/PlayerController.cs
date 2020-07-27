@@ -52,7 +52,7 @@ public class PlayerController : GameController {
             if (tLand.mOwnerNumber != aMyself.mPlayerNumber) return;//自分以外の土地
             tSelected = tLand;
             aElement.mTable.hideMessage();
-            aElement.mTable.question(tSelected.mName+"を解放しますか？\n食糧+"+tLand.mTotalValue);
+            aElement.mTable.question(tSelected.mName+"を解放しますか？\n食糧+"+tLand.mFreeCost);
         }));
         //はい,いいえ選択監視
         Subject.addObserver(new Observer("playerControllerTableQuestion", (aMessage) => {

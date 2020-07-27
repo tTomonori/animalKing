@@ -119,7 +119,7 @@ public partial class GameMaster : MyBehaviour {
     private void freeLand(LandMasStatus aLand, Action aCallback) {
         MySoundPlayer.playSe("cancel1");
         PlayerStatus tOwner = mElement.mPlayerStatus[aLand.mOwnerNumber];
-        tOwner.mFood += (int)(aLand.mTotalValue * 0.8f);
+        tOwner.mFood += aLand.mFreeCost;
         aLand.mOwnerNumber = -1;
         tOwner.mTerritory -= aLand.mTotalValue;
         mElement.mPlayerStatusDisplay[tOwner.mPlayerNumber].updateDisplay(tOwner);

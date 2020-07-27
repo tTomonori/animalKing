@@ -79,7 +79,7 @@ public partial class GameMaster : MyBehaviour {
         } else {
             List<LandMasStatus.LandAttribute> tList = getAllLandAttribute();
             tFood = UnityEngine.Random.Range(5, 10) + aPlayer.mLap / 5;
-            int i = UnityEngine.Random.Range((int)0, (int)(tList.Count - 1));
+            int i = UnityEngine.Random.Range((int)0, (int)(tList.Count));
             switch (tList[i]) {
                 case LandMasStatus.LandAttribute.north:
                     mElement.mTable.showMessage("北部地方を竜巻が襲った\n縄張りの"+tFood.ToString()+"%の食糧損失");
@@ -96,6 +96,10 @@ public partial class GameMaster : MyBehaviour {
                 case LandMasStatus.LandAttribute.west:
                     mElement.mTable.showMessage("西部地方を竜巻が襲った\n縄張りの"+tFood.ToString()+"%の食糧損失");
                     damageLandAttribute(tFood, LandMasStatus.LandAttribute.west, aCallback);
+                    break;
+                case LandMasStatus.LandAttribute.center:
+                    mElement.mTable.showMessage("中部地方を竜巻が襲った\n縄張りの" + tFood.ToString() + "%の食糧損失");
+                    damageLandAttribute(tFood, LandMasStatus.LandAttribute.center, aCallback);
                     break;
                 case LandMasStatus.LandAttribute.woods:
                     mElement.mTable.showMessage("森林地帯を酸性雨が襲った\n縄張りの"+tFood.ToString()+"%の食糧損失");
